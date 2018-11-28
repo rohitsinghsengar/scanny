@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_page">
+    <sp_page action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <css/>
+        <draft>false</draft>
+        <dynamic_title_structure/>
+        <id>scanny_form</id>
+        <internal>false</internal>
+        <public>false</public>
+        <roles/>
+        <short_description>Report an issue against an specific asset</short_description>
+        <sys_class_name>sp_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-28 11:16:13</sys_created_on>
+        <sys_id>933ac7a5e9caa300964f3c209cadb198</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>scanny_form</sys_name>
+        <sys_package display_value="scanny" source="x_scanny">ba351ec7e9f12300964f3c209cadb113</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="scanny">ba351ec7e9f12300964f3c209cadb113</sys_scope>
+        <sys_update_name>sp_page_933ac7a5e9caa300964f3c209cadb198</sys_update_name>
+        <sys_updated_by>maint</sys_updated_by>
+        <sys_updated_on>2018-11-28 18:15:57</sys_updated_on>
+        <title>Report an Issue</title>
+    </sp_page>
+    <sys_translated_text action="delete_multiple" query="documentkey=933ac7a5e9caa300964f3c209cadb198"/>
+</record_update>

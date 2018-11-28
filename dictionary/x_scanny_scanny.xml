@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Scanny" max_length="40" name="x_scanny_scanny" type="collection">
+        <element label="Asset" mandatory="true" max_length="32" name="asset" reference="alm_asset" type="reference"/>
+        <element label="issues" max_length="4000" name="issues" type="simple_name_values"/>
+        <element label="Nearby" max_length="4000" name="nearby" reference="alm_asset" type="glide_list"/>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element label="Suggestions" max_length="4000" name="suggestions" reference="kb_knowledge" type="glide_list"/>
+        <index name="index">
+            <element name="asset"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>1</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">d73acba5e9caa300964f3c209cadb1be</sp_column>
+        <sp_widget display_value="scanny_form">533ac7a5e9caa300964f3c209cadb196</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-28 11:16:13</sys_created_on>
+        <sys_id>9f3acba5e9caa300964f3c209cadb1bf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="scanny" source="x_scanny">ba351ec7e9f12300964f3c209cadb113</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="scanny">ba351ec7e9f12300964f3c209cadb113</sys_scope>
+        <sys_update_name>sp_instance_9f3acba5e9caa300964f3c209cadb1bf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-28 11:16:13</sys_updated_on>
+        <title/>
+        <url/>
+        <widget_parameters/>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=9f3acba5e9caa300964f3c209cadb1bf"/>
+</record_update>

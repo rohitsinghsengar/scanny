@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description>This will take following parameters,&#13;
+1) Scanny id or sys id &#13;
+2) Size: small, medium or large&#13;
+and print QR code accordingly.</description>
+        <direct>false</direct>
+        <endpoint>x_scanny_printQRCode.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	
+<g:evaluate jelly="true">
+	var link = gs.getProperty("x_scanny.portalpagelink","");
+	var finalUrl = link + '&amp;sys_id=' + RP.getParameterValue('sysparm_sys_id');
+</g:evaluate>
+	
+<script src="https://combinatronics.com/davidshimjs/qrcodejs/master/qrcode.min.js"></script>
+	
+<style type = "text/css">
+	img{
+		visibility:visible;
+	}
+</style>
+
+<h1>Something wrong?</h1>
+<div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+<h2>Scan Me</h2>
+<script type="text/javascript">
+	
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+	width : 100,
+	height : 100
+});
+
+function makeCode () {		
+	var qrURL = location.protocol + '//' + location.host + '/' + '${finalUrl}';
+	
+	var parser = new DOMParser;
+	var dom = parser.parseFromString(
+    '<html><body>' + qrURL + '</body></html>','text/html');
+	qrURL = dom.body.textContent;
+	
+	qrcode.makeCode(qrURL);
+	setTimeout(window.print(),5000);
+}
+
+makeCode();
+	
+</script>
+</j:jelly>]]></html>
+        <name>printQRCode</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-23 11:54:21</sys_created_on>
+        <sys_id>b530e908e9426300964f3c209cadb13b</sys_id>
+        <sys_mod_count>34</sys_mod_count>
+        <sys_name>printQRCode</sys_name>
+        <sys_package display_value="scanny" source="x_scanny">ba351ec7e9f12300964f3c209cadb113</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="scanny">ba351ec7e9f12300964f3c209cadb113</sys_scope>
+        <sys_update_name>sys_ui_page_b530e908e9426300964f3c209cadb13b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-27 22:05:31</sys_updated_on>
+    </sys_ui_page>
+</record_update>
