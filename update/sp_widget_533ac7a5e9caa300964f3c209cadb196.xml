@@ -20,8 +20,17 @@
         <css>.container{
 	padding: 0px 15px;
 }
+.badge.badge-pill{
+	background-color: #d9534f;
+}
 .tab-pane{
 	margin-top: 10px;
+}
+form{
+	margin: 10px 0px;
+}
+h1{
+  margin-top: -5px;
 }</css>
         <data_table>sp_instance</data_table>
         <demo_data/>
@@ -43,10 +52,16 @@
 	data.incident = '';
 	data.incident_id = '';
 	data.showMsg = false;
+	data.showCriticalMsg = false;
+	data.showStatusMsg = false;
+	data.showForm = true;
 	data.device = {};
 	data.issues = [];
 	data.nearbyDevices = [];
 	data.relatedKbas = [];
+	data.relatedIncidents = 0;
+		
+	var status = ['NA','in use','in order','in maintenance','NA','NA','in stock','retired','missing'];
 	
 	var sys_id = $sp.getParameter('sys_id');
 	if(sys_id)
@@ -61,9 +76,15 @@
 	}
 	var device = gr.asset.getRefRecord();
 	data.device.name = device.display_name.toString();
-	data.device.model = device.model.toString();
-	data.device.assetTag = device.asset_tag.toString();
-	data.device.location = device.location.toString();
+	data.device.id = device.sys_id.toString();
+	data.device.status = device.install_status.toString();
+	
+	var grInciCount = new GlideRecord('incident');
+	grInciCount.addQuery('u_asset_1',data.device.id);
+	grInciCount.addQuery('state', '!=', 7);
+	grInciCount.addQuery('state', '!=', 8);
+	grInciCount.query();
+	data.relatedIncidents = grInciCount.getRowCount();
 	
 	var grAsset = new GlideRecord('alm_asset');
 	grAsset.addQuery('sys_id', 'IN', gr.nearby);
@@ -80,17 +101,36 @@
 		data.relatedKbas.push({'sys_id':grKb.sys_id.toString(),'title':grKb.short_description.toString()});
   }
 	
+	if(data.device.status != 1){
+		data.device.statusMsg = 'The device currently is '+status[data.device.status]+'. Kindly use similar devices nearby.'
+		data.showStatusMsg = true;
+		data.showForm = false;
+		return false;
+	}
+	
 	if(input && input.action == "logIncident"){
 			var grInci = new GlideRecord('incident');
 			grInci.initialize();
-			grInci.short_description = input.problem+' Device: '+data.device.name;
+			grInci.short_description = input.problem+' ::Device:: '+data.device.name;
 			grInci.category = 'hardware';
 			grInci.caller_id = gs.getUserID();
-			grInci.description = input.problem_desc+'\nDevice- '+data.device.name+'\nModel- '+data.device.model+'\nLocation- '+data.device.location;
+			grInci.description = input.problem_desc;
+			if(data.relatedIncidents > 4){
+				grInci.impact = 1;
+				grInci.urgency = 1;
+				data.showCriticalMsg = true;
+			}else{
+				grInci.impact = 3;
+				grInci.urgency = 2;
+			}
+			grInci.contact_type = 'self-service';
+			grInci.u_asset_1 = data.device.id;
 			grInci.insert();
 			data.incident_id = grInci.sys_id.toString();
 			data.incident = grInci.number.toString();
 			data.showMsg = true;
+			data.showForm = false;
+			data.relatedIncidents = 0;
 	}
 	
 })();]]></script>
@@ -99,56 +139,64 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-28 11:16:13</sys_created_on>
         <sys_id>533ac7a5e9caa300964f3c209cadb196</sys_id>
-        <sys_mod_count>104</sys_mod_count>
+        <sys_mod_count>143</sys_mod_count>
         <sys_name>scanny_form</sys_name>
         <sys_package display_value="scanny" source="x_scanny">ba351ec7e9f12300964f3c209cadb113</sys_package>
         <sys_policy/>
         <sys_scope display_value="scanny">ba351ec7e9f12300964f3c209cadb113</sys_scope>
         <sys_update_name>sp_widget_533ac7a5e9caa300964f3c209cadb196</sys_update_name>
-        <sys_updated_by>maint</sys_updated_by>
-        <sys_updated_on>2018-11-28 20:08:45</sys_updated_on>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-29 11:13:57</sys_updated_on>
         <template><![CDATA[<div class="container" ng-show="c.data.show">
-<h1>Facing Problems with this device?</h1>
+  <h1>Facing problems with device?</h1>
   <label>Device: <strong>{{data.device.name}}</strong></label>
-<div ng-show="c.data.showMsg" class="alert alert-success" role="alert">
-  An incident <a href="/sp?id=ticket&table=incident&sys_id={{data.incident_id}}" target="_blank">{{data.incident}}</a> has been logged against this device.
-</div>
-<form ng-hide="c.data.showMsg">
-  <div class="form-group">
-    <label for="issueSelect">What's the issue?</label>
-    <select class="form-control" id="issueSelect">
-      <option ng-repeat="issue in data.issues" value="{{issue.val}}">{{issue.key}}</option>
-    </select>
+  <div ng-show="c.data.showMsg" class="alert alert-success" role="alert">
+    An incident <a href="/sp?id=ticket&table=incident&sys_id={{data.incident_id}}" target="_blank">{{data.incident}}</a> has been logged against this device. 
   </div>
-  <div class="form-group">
-    <label for="detailTextarea">Can you explain?</label>
-    <textarea class="form-control" id="detailTextarea" rows="3"></textarea>
+  <div ng-show="c.data.showCriticalMsg" class="alert alert-danger" role="alert">
+    Due to high number of open incident, the prioity of this incident has been raised to critical.
   </div>
-  <button type="submit" ng-click="c.submit()" class="btn btn-primary">Submit</button>
-</form>
-<br />
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Nearby Devices</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Suggested KB Articles</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <ul>
-      <li ng-repeat="device in data.nearbyDevices">{{device}}</li>
-    </ul>
+  <div ng-show="c.data.showStatusMsg" class="alert alert-warning" role="alert">
+    {{data.device.statusMsg}}
   </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <ul>
-      <li ng-repeat="kb in data.relatedKbas">
-        <a href="/sp?id=kb_article&sys_id={{kb.sys_id}}" target="_blank">{{kb.title}}</a>
-      </li>
-    </ul>
+  <div ng-show="c.data.relatedIncidents" class="alert alert-info" role="alert">
+    {{c.data.relatedIncidents}} incident(s) have already opened against this device. 
   </div>
-</div>
+  <form ng-show="c.data.showForm">
+    <div class="form-group">
+      <label for="issueSelect">What's the issue? <span class="badge badge-pill">Required</span></label>
+      <select class="form-control" id="issueSelect">
+        <option ng-repeat="issue in data.issues" value="{{issue.val}}">{{issue.key}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="detailTextarea">Can you explain?</label>
+      <textarea class="form-control" id="detailTextarea" rows="3"></textarea>
+    </div>
+    <button type="submit" ng-click="c.submit()" class="btn btn-primary">Submit</button>
+  </form>
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item active">
+      <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Suggested KB Articles</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Similar Devices Nearby</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade active in" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <ul>
+        <li ng-repeat="kb in data.relatedKbas">
+          <a href="/sp?id=kb_article&sys_id={{kb.sys_id}}" target="_blank">{{kb.title}}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="tab-pane fade active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <ul>
+        <li ng-repeat="device in data.nearbyDevices">{{device}}</li>
+      </ul>
+    </div>
+  </div>
 </div>]]></template>
     </sp_widget>
 </record_update>

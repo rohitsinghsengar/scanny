@@ -21,17 +21,23 @@ and print QR code accordingly.</description>
 <style type = "text/css">
 	img{
 		visibility:visible;
+		width: 200px;
+		height: 200px;
+		margin: 15px auto;
+	}
+	h1,h2{
+		text-align: center;
 	}
 </style>
 
 <h1>Something wrong?</h1>
-<div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+<div id="qrcode"></div>
 <h2>Scan Me</h2>
 <script type="text/javascript">
 	
 var qrcode = new QRCode(document.getElementById("qrcode"), {
-	width : 100,
-	height : 100
+	width : 200,
+	height : 200
 });
 
 function makeCode () {		
@@ -56,13 +62,13 @@ makeCode();
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-23 11:54:21</sys_created_on>
         <sys_id>b530e908e9426300964f3c209cadb13b</sys_id>
-        <sys_mod_count>34</sys_mod_count>
+        <sys_mod_count>40</sys_mod_count>
         <sys_name>printQRCode</sys_name>
         <sys_package display_value="scanny" source="x_scanny">ba351ec7e9f12300964f3c209cadb113</sys_package>
         <sys_policy/>
         <sys_scope display_value="scanny">ba351ec7e9f12300964f3c209cadb113</sys_scope>
         <sys_update_name>sys_ui_page_b530e908e9426300964f3c209cadb13b</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-27 22:05:31</sys_updated_on>
+        <sys_updated_on>2018-11-28 22:47:40</sys_updated_on>
     </sys_ui_page>
 </record_update>
